@@ -1,11 +1,12 @@
 // const $ = require('jquery');
-import 'angular';
+// require('angular');
+const element$ = $("#test");
 const app = angular.module("app", ["ngAnimate", function() {}]);
-import 'ng-file-upload';
+// import 'ng-file-upload';
 app.run([
     function() {
         const element$ = $("#test");
-        element$.append(' + append');
+        element$.append(" + append");
         console.log(element$[0]);
     }
 ]);
