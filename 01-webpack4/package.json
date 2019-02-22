@@ -1,0 +1,28 @@
+{
+    "name": "01-webpack4",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "webpack-dev-server",
+        "build": "webpack",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "angular": "^1.7.7",
+        "angular-animate": "^1.7.7",
+        "jquery": "^3.3.1",
+        "moment": "^2.24.0",
+        "ng-file-upload": "^12.2.13"
+    },
+    "devDependencies": {
+        "exports-loader": "^0.7.0",
+        "html-webpack-plugin": "^3.2.0",
+        "raw-loader": "^1.0.0",
+        "webpack": "^4.23.1",
+        "webpack-cli": "^3.2.3",
+        "webpack-dev-server": "^3.2.0"
+    }
+}
