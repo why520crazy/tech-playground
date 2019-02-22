@@ -43,6 +43,12 @@ module.exports = exports = {
                 vendors: {
                     name: "vendors",
                     test(module, chunks) {
+                        console.log(`[${module.context}]`);
+                        const names = [];
+                        chunks.forEach((chunk) => {
+                            names.push(chunk.name);
+                        });
+                        console.log(names.join(' | '));
                         let hasVendors = false;
                         chunks.forEach((chunk) => {
                             if (chunk.name === "vendors") {

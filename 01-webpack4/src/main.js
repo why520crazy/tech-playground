@@ -1,4 +1,5 @@
 // const $ = require('jquery');
+import 'angular';
 const app = angular.module("app", ["ngAnimate", function() {}]);
 import 'ng-file-upload';
 app.run([
