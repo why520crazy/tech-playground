@@ -12,7 +12,7 @@ module.exports = exports = {
     mode: "development",
     entry: {
         // vendors: ["jquery", "angular", "angular-animate", "moment"],
-        vendors: path.resolve(projectRoot, "./src/vendors.js"),
+        // vendors: path.resolve(projectRoot, "./src/vendors.js"),
         main: path.resolve(projectRoot, "./src/main.js")
     },
     resolve: {
@@ -44,22 +44,22 @@ module.exports = exports = {
         ]
     },
     plugins: [
-        // new ConcatPlugin({
-        //     // examples
-        //     uglify: false,
-        //     sourceMap: false,
-        //     name: "vendors",
-        //     fileName: "[name].bundle.js",
-        //     filesToConcat: [
-        //         "jquery",
-        //         "angular/angular.js",
-        //         "angular-animate/angular-animate.js",
-        //         "moment"
-        //     ],
-        //     attributes: {
-        //         async: true
-        //     }
-        // }),
+        new ConcatPlugin({
+            // examples
+            uglify: false,
+            sourceMap: false,
+            name: "vendors",
+            fileName: "[name].bundle.js",
+            filesToConcat: [
+                "jquery",
+                "angular/angular.js",
+                "angular-animate/angular-animate.js",
+                "moment"
+            ],
+            attributes: {
+                async: true
+            }
+        }),
         new HtmlWebpackPlugin({ template: "./src/index.html" }),
         new webpack.ContextReplacementPlugin(
             /moment[\/\\]locale$/,
@@ -75,60 +75,61 @@ module.exports = exports = {
             // 'window.angular': 'angular'
         })
     ],
-    // externals: {
-    //     jquery: "jQuery",
-    //     moment: "moment",
-    //     lodash: "_"
-    // },
-    optimization: {
-        // runtimeChunk: true,
-        splitChunks: {
-            cacheGroups: {
-                vendors: {
-                    name: "vendors1",
-                    test(module, chunks) {
-                        // let result = false;
-                        // vendorsScripts.forEach(vendorsScript => {
-                        //     if (
-                        //         module.context.includes(
-                        //             `node_modules/${vendorsScript}`
-                        //         )
-                        //     ) {
-                        //         console.log(`[${module.context}]`);
-                        //         result = true;
-                        //     }
-                        // });
-                        // return result;
-                        count++;
-                        const names = [];
-                        chunks.forEach(chunk => {
-                            names.push(chunk.name);
-                        });
-                        console.log(
-                            `${module.context} \n ` +
-                                names.join(",") +
-                                ` | count:${count}`
-                        );
-                        let hasVendors = false;
-                        chunks.forEach(chunk => {
-                            if (chunk.name === "vendors") {
-                                hasVendors = true;
-                            }
-                        });
-                        return hasVendors;
-                    },
-                    // test: /[\\/]node_modules[\\/]/,
-                    priority: -10,
-                    chunks: "initial"
-                },
-                default: {
-                    minChunks: 2,
-                    priority: -20,
-                    reuseExistingChunk: true
-                }
-            }
-        }
+    externals: {
+        jquery: "jQuery",
+        moment: "moment",
+        lodash: "_",
+        angular: "angular"
     },
+    // optimization: {
+    //     // runtimeChunk: true,
+    //     splitChunks: {
+    //         cacheGroups: {
+    //             vendors: {
+    //                 name: "vendors1",
+    //                 test(module, chunks) {
+    //                     // let result = false;
+    //                     // vendorsScripts.forEach(vendorsScript => {
+    //                     //     if (
+    //                     //         module.context.includes(
+    //                     //             `node_modules/${vendorsScript}`
+    //                     //         )
+    //                     //     ) {
+    //                     //         console.log(`[${module.context}]`);
+    //                     //         result = true;
+    //                     //     }
+    //                     // });
+    //                     // return result;
+    //                     count++;
+    //                     const names = [];
+    //                     chunks.forEach(chunk => {
+    //                         names.push(chunk.name);
+    //                     });
+    //                     console.log(
+    //                         `${module.context} \n ` +
+    //                             names.join(",") +
+    //                             ` | count:${count}`
+    //                     );
+    //                     let hasVendors = false;
+    //                     chunks.forEach(chunk => {
+    //                         if (chunk.name === "vendors") {
+    //                             hasVendors = true;
+    //                         }
+    //                     });
+    //                     return hasVendors;
+    //                 },
+    //                 // test: /[\\/]node_modules[\\/]/,
+    //                 priority: -10,
+    //                 chunks: "initial"
+    //             },
+    //             default: {
+    //                 minChunks: 2,
+    //                 priority: -20,
+    //                 reuseExistingChunk: true
+    //             }
+    //         }
+    //     }
+    // },
     devServer: {
         contentBase: path.join(__dirname, "dist"),
         compress: false,
