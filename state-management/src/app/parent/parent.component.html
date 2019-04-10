@@ -1,0 +1,6 @@
+<div>
+  <h4>parent: {{name}}!</h4>
+  <app-child class="component-box" [text]="text" (textClick)="onChildTextClick()"></app-child>
+</div>
+
+<p *ngIf="logMessage" class="text-info mt-3">{{logMessage}}</p>

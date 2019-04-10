@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "ngx-tethys/styles/index.scss";
+
+
+.component-box {
+    display: block;
+    // height: 200px;
+    max-width: 500px;
+    padding: 20px;
+    border: 2px dashed #ddd;
+}
