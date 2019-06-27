@@ -13,7 +13,8 @@ export class ChildComponent implements OnInit {
 
     constructor(private parent: ParentComponent) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
 
     onTextClick(event: Event) {
         // this.textClick.emit(event);
