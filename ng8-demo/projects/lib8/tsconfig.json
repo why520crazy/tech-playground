@@ -12,8 +12,8 @@
     "declaration": true,
     "lib": ["es2015", "dom"],
     "paths": {
-      "lib8": ["./public-api.ts"],
-      "lib8/*": ["./*"]
+      "@worktile/lib8": ["./public-api.ts"],
+      "@worktile/lib8/*": ["./*"]
     }
   },
   "files": ["./public-api.ts"],

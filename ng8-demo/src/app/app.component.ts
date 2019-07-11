@@ -1,5 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
-import { UserInfo, DEFAULT_USER, css } from '@worktile/lib8/entities';
+import { DEFAULT_USER } from '@worktile/lib8/entities';
+import { UserInfo } from '@worktile/lib8';
+import { getBook } from '@worktile/lib8/utils';
 
 @Component({
     selector: 'app-root',
@@ -7,8 +9,8 @@ import { UserInfo, DEFAULT_USER, css } from '@worktile/lib8/entities';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-
     // @HostBinding(`class.${css.layout}`) hasClass = true;
-    user = DEFAULT_USER;
+    user: UserInfo = DEFAULT_USER;
     title = 'ng8-demo';
+    book = getBook();
 }
