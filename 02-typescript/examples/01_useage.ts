@@ -1,6 +1,6 @@
-// 1 基本使用
-const number: number = 123;
+// // 1 基本使用
+// const aNumber: number = 123;
 
-function identity(number: number): number {
-    return number;
-}
+// function identity(aNumber: number): number {
+//     return number;
+// }

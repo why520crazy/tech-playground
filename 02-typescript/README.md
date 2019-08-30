@@ -1,4 +1,4 @@
-TypeScript 类型系统随便玩
+如何使用 TypeScript 写出类型安全的代码
 
 ## 编程语言
 
@@ -10,7 +10,7 @@ TypeScript 类型系统随便玩
 -   并行计算能力
 -   类型系统
 
-### 本质上只是解决下面 2 个问题
+### 本质上只是解决下面2个问题
 
 -   如何表示信息
 -   如何处理信息
@@ -27,40 +27,77 @@ TypeScript 类型系统随便玩
 -   Nominal Typing System 标明类型系统 (Java，C#，C++)
 -   Structural Typing 结构类型系统 (OCaml, Haskell, and Elm)
 
+C#
+```
+public class Foo  
+{
+    public string Name { get; set; }
+    public int Id { get; set;}
+}
+
+public class Bar  
+{
+    public string Name { get; set; }
+    public int Id { get; set; }
+}
+
+Foo foo = new Foo(); // Okay.
+Bar bar = new Foo(); // Error!!!
+```
+
+TypeScript
+
+```
+class Foo {
+  method(input: string): number { ... }
+}
+
+class Bar {
+  method(input: string): number { ... }
+}
+
+const foo: Foo = new Foo(); // Okay.
+const bar: Bar = new Foo(); // Okay.
+```
+
+TypeScript 为什么使用 `Structural Typing` ?
+
+> TypeScript 是 JavaScript 的超集，JS 是一门动态脚本语言，并且鸭子类型应用广泛，比如 `Iterable`，只需要实现 @@iterator 方法即可
+
 ## TypeScript 中的类型系统
 
 ### 基本使用
 
 ```
-const number: number = 123;
-function identity(number: number): number {
-  return number;
+const aNumber: number = 123;
+function identity(aNumber: number): number {
+  return aNumber;
 }
 ```
 
 ### 原始类型
 
 ```
-let number: number;
-let string: string;
-let boolean: boolean;
+let aNumber: number;
+let aString: string;
+let aBoolean: boolean;
 
-number = 123;
-number = 123.456;
-number = '123'; // Error
+aNumber = 123;
+aNumber = 123.456;
+aNumber = '123'; // Error
 
-string = '123';
-string = 123; // Error
+aString = '123';
+aString = 123; // Error
 
-boolean = true;
-boolean = false;
-boolean = 'false'; // Error
+aBoolean = true;
+aBoolean = false;
+aBoolean = 'false'; // Error
 ```
 
 ### 数组 Array
 
 ````
-let booleanArray: boolean[];
+let booleanArray: boolean[]; // 数组泛型 Array<boolean>
 
 booleanArray = [true, false];
 console.log(booleanArray[0]); // true
@@ -73,6 +110,53 @@ booleanArray[0] = 'false'; // Error
 booleanArray = 'false'; // Error
 booleanArray = [true, 'false']; // Error
 
+```
+
+### `null`、 `undefined`、 `any`、 `void`、`never`、`object`
+
+- null 和 undefined, 默认情况下 null 和 undefined 是所有类型的子类型, 可以把 null 和 undefined 赋值给 number 类型的变量, strictNullChecks
+- any 表示任何类型, 兼容 Javascript, 已有系统的改造特别有用, 对于一个合格的软件工程师来说, 尽量避免使用 any
+- void 表示没有任何类型, 没有返回值使用 void, 声明一个 void 类型的变量没有什么用, 只能赋值 null 和 undefined
+- never 类型表示永不存在的值的类型, never 类型是任何类型的子类型，也可以赋值给任何类型，然而，没有类型是 never 的子类型或可以赋值给never 类型（除了never本身之外）， 即使 any 也不可以赋值给 never
+- object 表示非原始类型，也就是除 number，string，boolean，symbol，null或undefined 之外的类型
+
+```
+// Null Or Undefined
+let aUndefined: undefined = undefined; // Oky
+aUndefined = null; // Oky
+aUndefined = 1; // Error
+
+let aNull: null = null; // Oky
+aNull = undefined; // Oky
+aNull = 1; // Error
+
+// Any
+let notSure: any = 4;
+notSure.ifItExists(); // okay, ifItExists might exist at runtime
+notSure.toFixed(); // okay, toFixed exists (but the compiler doesn't check)
+
+let prettySure: object = 4;
+prettySure.toFixed(); // Error: Property 'toFixed' doesn't exist on type 'Object'.
+
+// Void
+function warnUser(): void {
+    console.log('This is my warning message');
+}
+let unusable: void = undefined;
+
+// Never
+// 返回 never 的函数必须存在无法达到的终点
+function error(message: string): never {
+    throw new Error(message);
+}
+// 推断的返回值类型为never
+function fail() {
+    return error('Something failed');
+}
+// 返回never的函数必须存在无法达到的终点
+function infiniteLoop(): never {
+    while (true) {}
+}
 ```
 
 ### 接口 Interface
@@ -129,14 +213,11 @@ name = {
 };
 ```
 
-### 特殊的类型
-`any`、 `null`、 `undefined` 以及 `void`。
-
-### 
+### xxx
 
 ### Conditional Types
 
-### 内置的类型
+### 内置的高级类型
 
 - Required
 - Readonly

@@ -1,7 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
 import { DEFAULT_USER } from '@worktile/lib8/entities';
-import { UserInfo } from '@worktile/lib8';
 import { getBook } from '@worktile/lib8/utils';
+import { UserInfo } from '@worktile/lib8';
 
 @Component({
     selector: 'app-root',
@@ -13,4 +13,5 @@ export class AppComponent {
     user: UserInfo = DEFAULT_USER;
     title = 'ng8-demo';
     book = getBook();
+
 }

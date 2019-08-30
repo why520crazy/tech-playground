@@ -1,14 +1,12 @@
-() => {
-    let booleanArray: boolean[];
+// let booleanArray: boolean[]; // 数组泛型 Array<boolean>;
 
-    booleanArray = [true, false];
-    console.log(booleanArray[0]); // true
-    console.log(booleanArray.length); // 2
+// booleanArray = [true, false];
+// console.log(booleanArray[0]); // true
+// console.log(booleanArray.length); // 2
 
-    booleanArray[1] = true;
-    booleanArray = [false, false];
+// booleanArray[1] = true;
+// booleanArray = [false, false];
 
-    booleanArray[0] = 'false'; // Error
-    booleanArray = 'false'; // Error
-    booleanArray = [true, 'false']; // Error
-};
+// booleanArray[0] = 'false'; // Error
+// booleanArray = 'false'; // Error
+// booleanArray = [true, 'false']; // Error

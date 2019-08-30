@@ -1,16 +1,14 @@
-() => {
-    let number: number;
-    let string: string;
-    let boolean: boolean;
+// let aNumber: number;
+// let aString: string;
+// let aBoolean: boolean;
 
-    number = 123;
-    number = 123.456;
-    number = '123'; // Error
+// aNumber = 123;
+// aNumber = 123.456;
+// aNumber = '123'; // Error
 
-    string = '123';
-    string = 123; // Error
+// aString = '123';
+// aString = 123; // Error
 
-    boolean = true;
-    boolean = false;
-    boolean = 'false'; // Error
-};
+// aBoolean = true;
+// aBoolean = false;
+// aBoolean = 'false'; // Error

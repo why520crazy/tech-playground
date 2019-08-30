@@ -17,11 +17,11 @@
     "strictNullChecks": false,
     "allowSyntheticDefaultImports": true,
     "suppressImplicitAnyIndexErrors": true,
+    "suppressExcessPropertyErrors": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "lib": ["dom", "es6"],
     "types": ["jasmine"]
   },
-  "exclude": ["node_modules"],
-  "files": []
+  "exclude": ["node_modules"]
 }

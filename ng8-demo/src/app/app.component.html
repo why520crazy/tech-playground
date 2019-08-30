@@ -4,5 +4,6 @@
 </div>
 
 {{ user | json }}
-
+<hr>
+<a [routerLink]="['/dashboard']" routerLinkActive="active" >Dashboard</a> | <a [routerLink]="['/users']" routerLinkActive="active">Users</a>
 <router-outlet></router-outlet>

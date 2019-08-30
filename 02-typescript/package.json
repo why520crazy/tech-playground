@@ -1,0 +1,17 @@
+{
+  "name": "02-typescript",
+  "version": "1.0.0",
+  "description": "如何使用 TypeScript 写出类型安全的代码",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.6.2"
+  }
+}

@@ -1,9 +1,10 @@
-// interface Name {
+// let name: {
 //     first: string;
 //     second: string;
-// }
+// };
 
-// let name: Name;
+// type Name = typeof name;
+
 // name = {
 //     first: 'John',
 //     second: 'Doe'
