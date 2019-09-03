@@ -1,22 +1,24 @@
-// let name: {
+// let aName: {
 //     first: string;
 //     second: string;
 // };
 
-// type Name = typeof name;
-
-// name = {
+// aName = {
 //     first: 'John',
 //     second: 'Doe'
 // };
 
-// name = {
+// aName = {
 //     // Error: 'Second is missing'
 //     first: 'John'
 // };
 
-// name = {
+// aName = {
 //     // Error: 'Second is the wrong type'
 //     first: 'John',
 //     second: 1337
 // };
+
+// type Name = typeof aName;
+
+// const typeOfStr = typeof '';

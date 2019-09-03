@@ -2,7 +2,10 @@
 
 - [编程语言简单介绍](#programing-language)
 - [类型系统](#type-system)
-- [TypeScript 中的类型系统](#typescript-types)
+- [TypeScript 基本类型](#typescript-basic-types)
+- [TypeScript 泛型](#generics)
+- [TypeScript 条件类型](#typescript-condition-types)
+- [TypeScript 内置高级类型](#typescript-advance-types)
 - [常见的场景](#scenes)
 - [引用材料](#references)
 
@@ -70,8 +73,7 @@ TypeScript 为什么使用 `Structural Typing` ?
 
 > TypeScript 是 JavaScript 的超集，JS 是一门动态脚本语言，并且鸭子类型应用广泛，比如 `Iterable`，只需要实现 @@iterator 方法即可
 
-## <a name="typescript-types"></a>TypeScript 中的类型系统
-
+## <a name="typescript-basic-types"></a>TypeScript 基本类型
 ### 基本使用
 
 ```
@@ -224,7 +226,22 @@ aArray = aReadonlyArray; // error!
 aArray = aReadonlyArray as number[]; // Okay
 ```
 
-### Excess Property Checks
+接口继承接口
+```
+interface Shape {
+    color: string;
+}
+
+interface Square extends Shape {
+    sideLength: number;
+}
+
+let square = <Square>{};
+square.color = "blue";
+square.sideLength = 10;
+```
+
+### 额外的属性检查 Excess Property Checks
 
 ```
 interface Point {
@@ -245,7 +262,7 @@ draw(point);
 
 ```
 
-### 可索引的类型
+### 可索引的类型 Indexable Types
 
 可索引类型具有一个索引签名，它描述了对象索引的类型，还有相应的索引返回值类型, TypeScript支持两种索引签名：字符串和数字.
 
@@ -298,32 +315,132 @@ myArray[2] = 'Mallory'; // error!
 快速的提供一个类型，省去为类型起名（你可能会使用一个很糟糕的名称）, 发现需要多次使用相同的内联注解时，考虑把它重构为一个接口。
 
 ```
-let name: {
+let aName: {
     first: string;
     second: string;
 };
 
-name = {
+aName = {
     first: 'John',
     second: 'Doe'
 };
 
-name = {
+aName = {
     // Error: 'Second is missing'
     first: 'John'
 };
 
-name = {
+aName = {
     // Error: 'Second is the wrong type'
     first: 'John',
     second: 1337
 };
+
+type Name = typeof aName; // 获取 aName 的类型
+
+const typeOfStr = typeof '';
 ```
 
 
-### Conditional Types
+### 回顾类型的几个知识点
 
-### 内置的高级类型
+- 可选属性 ?, 可选参数也是使用 ?
+- 只读属性 readonly 
+- never
+- 字符串和数字索引类型
+- typeof 获取内联类型
+
+## <a name="generics"></a>泛型 Generics
+
+#### 范型基本使用
+
+创建一个 identity 函数, 这个函数会返回任何传入它的值，不用范型有哪几种方式实现这个函数？
+
+```
+function identity(arg: number): number {
+    return arg;
+}
+```
+
+泛型其实就是类型变量，它是一种特殊的变量，只用于表示类型而不是值，使返回值的类型与传入参数的类型是相同的
+
+```
+function identity<T>(arg: T): T {
+    return arg;
+}
+```
+
+#### 使用泛型变量
+```
+function loggingIdentity<T>(arg: T): T {
+    console.log(arg.length);  // Error: T doesn't have .length
+    return arg;
+}
+
+function loggingIdentity<T>(arg: T[]): T[] {
+    console.log(arg.length);  // Array has a .length, so no more error
+    return arg;
+}
+```
+
+#### 泛型类型, 泛型接口
+```
+function identity<T>(arg: T): T {
+    return arg;
+}
+
+let myIdentity: <T>(arg: T) => T = identity;
+let myIdentity2: <U>(arg: U) => U = identity;
+
+// 带有调用签名的对象字面量来定义泛型函数
+let myIdentity3: {<T>(arg: T): T} = identity;
+// 泛型接口
+interface GenericIdentityFn {
+    <T>(arg: T): T;
+}
+let myIdentity4: GenericIdentityFn = identity;
+
+// 把泛型参数当作整个接口的一个参数
+interface GenericIdentityFn5<T> {
+    (arg: T): T;
+}
+let myIdentity5: GenericIdentityFn5<number> = identity;
+```
+
+#### 泛型类
+
+```
+class GenericNumber<T> {
+    zeroValue: T;
+    add: (x: T, y: T) => T;
+}
+
+let myGenericNumber = new GenericNumber<number>();
+myGenericNumber.zeroValue = 0;
+myGenericNumber.add = function(x, y) { return x + y; };
+```
+
+类有两部分：静态部分和实例部分。 泛型类指的是实例部分的类型，所以类的静态属性不能使用这个泛型类型。
+
+#### 泛型约束
+
+```
+interface Lengthwise {
+    length: number;
+}
+
+function loggingIdentity<T extends Lengthwise>(arg: T): T {
+    console.log(arg.length);  // Now we know it has a .length property, so no more error
+    return arg;
+}
+
+loggingIdentity(3);  // Error, number doesn't have a .length property
+loggingIdentity({length: 10, value: 3});
+```
+
+## Conditional Types
+
+## TypeScript 内置的高级类型
 
 - Required
 - Readonly
