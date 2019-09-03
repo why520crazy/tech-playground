@@ -4,8 +4,8 @@
 - [类型系统](#type-system)
 - [TypeScript 基本类型](#typescript-basic-types)
 - [TypeScript 泛型](#generics)
-- [TypeScript 条件类型](#typescript-condition-types)
-- [TypeScript 内置高级类型](#typescript-advance-types)
+- [TypeScript 高级类型](#typescript-advance-types)
+- [TypeScript 内置类型](#typescript-types)
 - [常见的场景](#scenes)
 - [引用材料](#references)
 
@@ -57,21 +57,24 @@ Bar bar = new Foo(); // Error!!!
 TypeScript
 
 ```
-class Foo {
-  method(input: string): number { ... }
+interface Named {
+    name: string;
 }
 
-class Bar {
-  method(input: string): number { ... }
+class Person {
+    name: string;
 }
 
-const foo: Foo = new Foo(); // Okay.
-const bar: Bar = new Foo(); // Okay.
+let p: Named;
+// OK, because of structural typing
+p = new Person();
 ```
+
+结构类型是一种只使用其成员来描述类型的方式，（在基于 Nominal 类型的类型系统中，数据类型的兼容性或等价性是通过明确的声明和/或类型的名称来决定的。这与结构性类型系统不同，它是基于类型的组成结构，且不要求明确地声明）
 
 TypeScript 为什么使用 `Structural Typing` ?
 
-> TypeScript 是 JavaScript 的超集，JS 是一门动态脚本语言，并且鸭子类型应用广泛，比如 `Iterable`，只需要实现 @@iterator 方法即可
+> TypeScript 是 JavaScript 的超集，JS 是一门动态脚本语言，并且鸭子类型应用广泛，比如 `Iterable`，只需要实现 @@iterator 方法即可, 如果是其他语言会要求必须继承某个父类或者必须实现某个接口。JavaScript里广泛地使用匿名对象，例如函数表达式和对象字面量，所以使用结构类型系统来描述这些类型比使用 Nominal 类型系统更好。
 
 ## <a name="typescript-basic-types"></a>TypeScript 基本类型
 ### 基本使用
@@ -336,6 +339,16 @@ aName = {
     second: 1337
 };
 
+
+```
+
+### 类型推论
+```
+let x = 3;
+let x = [0, 1, null];
+let zoo = [new Rhino(), new Elephant(), new Snake()]; // (Rhino | Elephant | Snake)[]
+let zoo: Animal[] = [new Rhino(), new Elephant(), new Snake()];
+
 type Name = typeof aName; // 获取 aName 的类型
 
 const typeOfStr = typeof '';
@@ -349,10 +362,11 @@ const typeOfStr = typeof '';
 - never
 - 字符串和数字索引类型
 - typeof 获取内联类型
+- 类型断言 !
 
 ## <a name="generics"></a>泛型 Generics
 
-#### 范型基本使用
+#### 泛型基本使用
 
 创建一个 identity 函数, 这个函数会返回任何传入它的值，不用范型有哪几种方式实现这个函数？
 
@@ -438,9 +452,215 @@ loggingIdentity(3);  // Error, number doesn't have a .length property
 loggingIdentity({length: 10, value: 3});
 ```
 
-## Conditional Types
+## <a name="typescript-advance-types"></a>高级类型
 
-## TypeScript 内置的高级类型
+### 交叉类型（Intersection Types）
+
+交叉类型是将多个类型合并为一个类型。 这让我们可以把现有的多种类型叠加到一起成为一种类型，它包含了所需的所有类型的特性
+例如， Person & Serializable & Loggable同时是 Person 和 Serializable 和 Loggable。 就是说这个类型的对象同时拥有了这三种类型的成员。
+
+### 联合类型（Union Types）
+
+联合类型表示一个值可以是几种类型之一。 我们用竖线（ |）分隔每个类型，所以 number | string | boolean表示一个值可以是 number， string，或 boolean。
+
+```
+interface Bird {
+    fly(): void;
+    layEggs(): void;
+}
+
+interface Fish {
+    swim(): void;
+    layEggs(): void;
+}
+
+function getSmallPet(): Fish | Bird {
+    return null;
+}
+
+let pet = getSmallPet();
+pet.layEggs(); // okay
+pet.swim(); // errors
+```
+
+### 类型保护与区分类型（Type Guards and Differentiating Types）
+
+```
+interface Bird {
+    fly(): void;
+    layEggs(): void;
+}
+
+interface Fish {
+    swim(): void;
+    layEggs(): void;
+}
+
+function getSmallPet(): Fish | Bird {
+    return null;
+}
+
+// let pet = getSmallPet();
+
+// // 每一个成员访问都会报错
+// if (pet.swim) {
+//     pet.swim();
+// }
+// else if (pet.fly) {
+//     pet.fly();
+// }
+
+
+let pet = getSmallPet();
+if ((<Fish>pet).swim) {
+    (<Fish>pet).swim();
+}
+else {
+    (<Bird>pet).fly();
+}
+
+
+// 用户自定义的类型保护
+function isFish(pet: Fish | Bird): pet is Fish {
+    return (<Fish>pet).swim !== undefined;
+}
+
+if (isFish(pet)) {
+    pet.swim();
+}
+else {
+    pet.fly();
+}
+```
+
+TypeScript不仅知道在 if分支里 pet是 Fish类型； 它还清楚在 else分支里，一定 不是 Fish类型，一定是 Bird类型
+
+// 内置的类型保护
+- typeof 类型保护
+- instanceof 类型保护
+
+### 类型别名
+类型别名会给一个类型起个新名字。 类型别名有时和接口很像，但是可以作用于原始值，联合类型，元组以及其它任何你需要手写的类型。
+
+```
+type Name = string;
+type NameResolver = () => string;
+type NameOrResolver = Name | NameResolver;
+function getName(n: NameOrResolver): Name {
+    if (typeof n === 'string') {
+        return n;
+    }
+    else {
+        return n();
+    }
+}
+```
+
+同接口一样，类型别名也可以是泛型 - 我们可以添加类型参数并且在别名声明的右侧传入：
+
+```
+type Container<T> = { value: T };
+type Tree<T> = {
+    value: T;
+    left: Tree<T>;
+    right: Tree<T>;
+}
+
+type LinkedList<T> = T & { next: LinkedList<T> };
+
+interface Person {
+    name: string;
+}
+
+let people: LinkedList<Person>;
+let s1 = people.name;
+let s2 = people.next.name;
+let s3 = people.next.next.name;
+let s4 = people.next.next.next.name;
+
+
+type Alias = { num: number }
+interface Interface {
+    num: number;
+}
+declare function aliased(arg: Alias): Alias;
+declare function interfaced(arg: Interface): Interface;
+```
+
+与接口的最大区别：类型别名不能被 extends和 implements，因为 软件中的对象应该对于扩展是开放的，但是对于修改是封闭的，你应该尽量去使用接口代替类型别名。
+
+无法通过接口来描述一个类型并且需要使用联合类型或元组类型，这时通常会使用类型别名。
+
+### 字符串字面量类型 String Literal Types
+
+字符串字面量类型允许你指定字符串必须的固定值。
+```
+type Easing = "ease-in" | "ease-out" | "ease-in-out";
+class UIElement {
+    animate(dx: number, dy: number, easing: Easing) {
+        if (easing === "ease-in") {
+            // ...
+        }
+        else if (easing === "ease-out") {
+        }
+        else if (easing === "ease-in-out") {
+        }
+        else {
+            // error! should not pass null or undefined.
+        }
+    }
+}
+
+let button = new UIElement();
+button.animate(0, 0, "ease-in");
+button.animate(0, 0, "uneasy"); // error: "uneasy" is not allowed here
+```
+
+### 数字字面量类型 Numeric Literal Types
+```
+function rollDie(): 1 | 2 | 3 | 4 | 5 | 6 {
+    // ...
+}
+```
+
+### 可辨识联合（Discriminated Unions）
+
+你可以合并单例类型(枚举成员类型和数字/字符串字面量类)，联合类型，类型保护和类型别名来创建一个叫做可辨识联合的高级模式，它也称做 标签联合或 代数数据类型。 可辨识联合在函数式编程很有用处。 一些语言会自动地为你辨识联合；而 TypeScript 则基于已有的JavaScript模式。 它具有3个要素：
+
+- 具有普通的单例类型属性 - 可辨识的特征。
+- 一个类型别名包含了那些类型的联合 - 联合。
+- 此属性上的类型保护。
+
+```
+interface Square {
+    kind: 'square';
+    size: number;
+}
+interface Rectangle {
+    kind: 'rectangle';
+    width: number;
+    height: number;
+}
+interface Circle {
+    kind: 'circle';
+    radius: number;
+}
+
+type Shape = Square | Rectangle | Circle;
+
+function area(s: Shape) {
+    switch (s.kind) {
+        case 'square':
+            return s.size * s.size;
+        case 'rectangle':
+            return s.height * s.width;
+        case 'circle':
+            return Math.PI * s.radius ** 2;
+    }
+}
+```
+
+## TypeScript 内置的高级泛型类型
 
 - Required
 - Readonly
@@ -474,6 +694,7 @@ if (!_.isNil(view.priority)) {
 ```
 
 ## <a name="references"></a>引用材料
+https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md
 https://www.typescriptlang.org/docs/home.html
 https://www.tslang.cn/docs/handbook/basic-types.html
 https://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1

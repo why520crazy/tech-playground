@@ -19,6 +19,3 @@
 //     second: 1337
 // };
 
-// type Name = typeof aName;
-
-// const typeOfStr = typeof '';
