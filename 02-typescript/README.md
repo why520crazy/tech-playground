@@ -1,6 +1,12 @@
 # 如何使用 TypeScript 写出类型安全的代码
 
-## 编程语言
+- [编程语言简单介绍](#programing-language)
+- [类型系统](#type-system)
+- [TypeScript 中的类型系统](#typescript-types)
+- [常见的场景](#scenes)
+- [引用材料](#references)
+
+## <a name="programing-language"></a>编程语言简单介绍
 
 ### 编程语言的特性
 
@@ -64,7 +70,7 @@ TypeScript 为什么使用 `Structural Typing` ?
 
 > TypeScript 是 JavaScript 的超集，JS 是一门动态脚本语言，并且鸭子类型应用广泛，比如 `Iterable`，只需要实现 @@iterator 方法即可
 
-## TypeScript 中的类型系统
+## <a name="typescript-types"></a>TypeScript 中的类型系统
 
 ### 基本使用
 
@@ -96,7 +102,7 @@ aBoolean = 'false'; // Error
 
 ### 数组 Array
 
-````
+```
 let booleanArray: boolean[]; // 数组泛型 Array<boolean>
 
 booleanArray = [true, false];
@@ -109,8 +115,8 @@ booleanArray = [false, false];
 booleanArray[0] = 'false'; // Error
 booleanArray = 'false'; // Error
 booleanArray = [true, 'false']; // Error
-
 ```
+
 
 ### `null`、 `undefined`、 `any`、 `void`、`never`、`object`
 
@@ -165,25 +171,126 @@ function infiniteLoop(): never {
 interface Name {
     first: string;
     second: string;
+    getFullName?(): boolean;
 }
 
-let name: Name;
-name = {
+let aName: Name;
+aName = {
     first: 'John',
     second: 'Doe'
 };
 
-name = {
+aName = {
     // Error: 'Second is missing'
     first: 'John'
 };
 
-name = {
+aName = {
     // Error: 'Second is the wrong type'
     first: 'John',
     second: 1337
 };
 
+```
+
+可选属性 `?`，有些属性是只在某些条件下存在，或者根本不存在。
+
+```
+interface SquareConfig {
+    color?: string;
+    width?: number;
+}
+```
+
+只读属性
+```
+interface Point {
+    readonly x: number;
+    readonly y: number;
+}
+let p1: Point = { x: 10, y: 20 };
+p1.x = 5; // error!
+```
+
+顺便说下 `ReadonlyArray<T>` 和 `Array<T>` 区别
+
+```
+let aArray: number[] = [1, 2, 3, 4];
+let aReadonlyArray: ReadonlyArray<number> = a;
+aReadonlyArray[0] = 12; // error!
+aReadonlyArray.push(5); // error!
+aReadonlyArray.length = 100; // error!
+aArray = aReadonlyArray; // error!
+aArray = aReadonlyArray as number[]; // Okay
+```
+
+### Excess Property Checks
+
+```
+interface Point {
+    x: number;
+    y: number;
+};
+
+function draw(point: Point) {
+    console.log(point);
+}
+
+draw({ x: 10, y: 25 }); // Okay.
+// Extra fields Okay. Need enable `suppressExcessPropertyErrors: true`
+draw({ x: 8, y: 13, name: 'foo' });
+draw({ x: 8, y: 13, name: 'foo' } as Point);
+const point = { x: 8, y: 13, name: 'foo' };
+draw(point);
+
+```
+
+### 可索引的类型
+
+可索引类型具有一个索引签名，它描述了对象索引的类型，还有相应的索引返回值类型, TypeScript支持两种索引签名：字符串和数字.
+
+
+```
+interface StringArray {
+  [index: number]: string;
+}
+
+let myArray: StringArray;
+myArray = ["Bob", "Fred"];
+
+let myStr: string = myArray[0];
+```
+
+可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。 这是因为当使用 number来索引时，JavaScript会将它转换成string然后再去索引对象。 也就是说用 100（一个number）去索引等同于使用"100"（一个string）去索引，因此两者需要保持一致。
+
+```
+
+class Animal {
+    name: string;
+}
+class Dog extends Animal {
+    breed: string;
+}
+
+interface NotOkay {
+    [x: number]: Animal; // 数字索引类型“Animal”不能赋给字符串索引类型“Dog”。
+    [x: string]: Dog;
+}
+
+interface NumberDictionary {
+  [index: string]: number;
+  length: number;    // 可以，length是number类型
+  name: string       // 错误，类型“string”的属性“name”不能赋给字符串索引类型“number”。
+}
+
+```
+索引签名设置为只读
+```
+interface ReadonlyStringArray {
+    readonly [index: number]: string;
+}
+let myArray: ReadonlyStringArray = ['Alice', 'Bob'];
+myArray[2] = 'Mallory'; // error!
 ```
 
 ### 内联类型
@@ -213,7 +320,6 @@ name = {
 };
 ```
 
-### xxx
 
 ### Conditional Types
 
@@ -235,8 +341,24 @@ name = {
 - ThisType
 
 
-## 引用
+## 反模式
 
+```
+const condition: any = {
+    project_id: context.project._id,
+    is_deleted: { $ne: Is.yes },
+    is_archived: { $ne: Is.yes }
+};
+
+if (!_.isNil(view.priority)) {
+    const option = this.validateOptions(ScrumDefectStatisticsProperties.priority, _.parseId(view.priority));
+    condition.priority = option._id;
+}
+```
+
+## <a name="references"></a>引用材料
+https://www.typescriptlang.org/docs/home.html
+https://www.tslang.cn/docs/handbook/basic-types.html
 https://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1
 https://zhuanlan.zhihu.com/p/64446259
 https://www.zhihu.com/question/23434097
