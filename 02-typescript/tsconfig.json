@@ -14,7 +14,7 @@
     "declaration": true,
     "skipLibCheck": false,
     "stripInternal": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "suppressImplicitAnyIndexErrors": true,
     "suppressExcessPropertyErrors": false,

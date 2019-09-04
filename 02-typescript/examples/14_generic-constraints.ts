@@ -1,51 +1,51 @@
-interface Lengthwise {
-    length: number;
-}
-
-function loggingIdentity<T extends Lengthwise>(arg: T): T {
-    console.log(arg.length); // Now we know it has a .length property, so no more error
-    return arg;
-}
-loggingIdentity(3); // Error, number doesn't have a .length property
-loggingIdentity({ length: 10, value: 3 });
-
-
-// function getProperty<T, K>(obj: T, key: K) {
-//     return obj[key];
+// interface Lengthwise {
+//     length: number;
 // }
-// let x = { a: 1, b: 2, c: 3, d: 4 };
-// getProperty(x, 'a'); // okay
-// getProperty(x, 'm'); // error: Argument of type 'm' isn't assignable to 'a' | 'b' | 'c' | 'd'.
+
+// function loggingIdentity<T extends Lengthwise>(arg: T): T {
+//     console.log(arg.length); // Now we know it has a .length property, so no more error
+//     return arg;
+// }
+// loggingIdentity(3); // Error, number doesn't have a .length property
+// loggingIdentity({ length: 10, value: 3 });
 
 
-function create<T>(c: {new(): T; }): T {
-    return new c();
-}
+// // function getProperty<T, K>(obj: T, key: K) {
+// //     return obj[key];
+// // }
+// // let x = { a: 1, b: 2, c: 3, d: 4 };
+// // getProperty(x, 'a'); // okay
+// // getProperty(x, 'm'); // error: Argument of type 'm' isn't assignable to 'a' | 'b' | 'c' | 'd'.
 
 
-class BeeKeeper {
-    hasMask: boolean;
-}
+// function create<T>(c: {new(): T; }): T {
+//     return new c();
+// }
 
-class ZooKeeper {
-    nameTag: string;
-}
 
-class Animal {
-    numLegs: number;
-}
+// class BeeKeeper {
+//     hasMask: boolean;
+// }
 
-class Bee extends Animal {
-    keeper: BeeKeeper;
-}
+// class ZooKeeper {
+//     nameTag: string;
+// }
 
-class Lion extends Animal {
-    keeper: ZooKeeper;
-}
+// class Animal {
+//     numLegs: number;
+// }
 
-function createInstance<A extends Animal>(c: new () => A): A {
-    return new c();
-}
+// class Bee extends Animal {
+//     keeper: BeeKeeper;
+// }
 
-createInstance(Lion).keeper.nameTag;  // typechecks!
-createInstance(Bee).keeper.hasMask;   // typechecks!
+// class Lion extends Animal {
+//     keeper: ZooKeeper;
+// }
+
+// function createInstance<A extends Animal>(c: new () => A): A {
+//     return new c();
+// }
+
+// createInstance(Lion).keeper.nameTag;  // typechecks!
+// createInstance(Bee).keeper.hasMask;   // typechecks!

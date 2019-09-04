@@ -79,7 +79,7 @@ TypeScript 为什么使用 `Structural Typing` ?
 ## <a name="typescript-basic-types"></a>TypeScript 基本类型
 ### 基本使用
 
-示例 `01_useage.ts`
+示例 `01_usage.ts`
 ```
 const aNumber: number = 123;
 function identity(aNumber: number): number {
@@ -359,6 +359,7 @@ let x = [0, 1, null];
 let zoo = [new Rhino(), new Elephant(), new Snake()]; // (Rhino | Elephant | Snake)[]
 let zoo: Animal[] = [new Rhino(), new Elephant(), new Snake()];
 
+// 上下文类型
 window.onmousedown = function(mouseEvent) {
     console.log(mouseEvent.button);   //<- OK
     console.log(mouseEvent.kangaroo); //<- Error!
@@ -369,6 +370,50 @@ type Name = typeof aName; // 获取 aName 的类型
 const typeOfStr = typeof '';
 ```
 
+## 类型保护和类型断言
+默认情况下，类型检查器认为 null与 undefined 可以赋值给任何类型, strictNullChecks 开启
+
+示例 `10_type-guards-type-assertions.ts`
+```
+let s = "foo";
+s = null; // 错误, 'null'不能赋值给'string'
+let sn: string | null = "bar";
+sn = null; // 可以
+
+sn = undefined; // error, 'undefined'不能赋值给'string | null'
+```
+
+```
+function f(sn: string | null): string {
+    if (sn == null) {
+        return "default";
+    }
+    else {
+        return sn;
+    }
+}
+function f(sn: string | null): string {
+    return sn || "default";
+}
+
+// 类型断言
+function broken(name: string | null): string {
+    function postfix(epithet: string) {
+        return name.charAt(0) + '.  the ' + epithet; // error, 'name' is possibly null
+    }
+    name = name || 'Bob';
+    return postfix('great');
+}
+
+function fixed(name: string | null): string {
+    function postfix(epithet: string) {
+        return name!.charAt(0) + '.  the ' + epithet; // ok
+    }
+    name = name || 'Bob';
+    return postfix('great');
+}
+```
+本例使用了嵌套函数，因为编译器无法去除嵌套函数的null（除非是立即调用的函数表达式）。 因为它无法跟踪所有对嵌套函数的调用，尤其是你将内层函数做为外层函数的返回值。 如果无法知道函数在哪里被调用，就无法知道调用时 name的类型。
 
 ### 回顾类型的几个知识点
 
@@ -377,7 +422,7 @@ const typeOfStr = typeof '';
 - never
 - 字符串和数字索引类型
 - typeof 获取以及定义的类型
-- 类型断言 !
+- 类型断言 ! 
 
 ## <a name="generics"></a>泛型 Generics
 
@@ -587,7 +632,7 @@ else {
 }
 ```
 
-TypeScript不仅知道在 if分支里 pet是 Fish类型； 它还清楚在 else分支里，一定 不是 Fish类型，一定是 Bird类型
+TypeScript 不仅知道在 if 分支里 pet 是 Fish 类型； 它还清楚在 else分支里，一定 不是 Fish 类型，一定是 Bird 类型
 
 内置的类型保护
 - typeof 类型保护
@@ -933,7 +978,7 @@ type T5 = Unpacked<Unpacked<Promise<string>[]>>;  // string
 - infer
 
 
-## <a name="predefined-types"></a>TypeScript 内置的高级类型
+## <a name="predefined-types"></a>TypeScript 内置的类型
 
 - Required 
 - Partial
@@ -1009,6 +1054,15 @@ const references: References = {
 mergeReferences(references, references, { users: 'uid', departments: '_id' });
 mergeReferences(references, references, { users1: 'uid', departments: '_id' });
 ```
+## 额外的知识点
+
+- Function Types
+- Class Types
+- Hybrid Types
+- Interfaces Extending Classes
+- Enums
+- Type Compatibility
+- ...
 
 ## <a name="references"></a>引用材料
 
