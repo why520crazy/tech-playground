@@ -79,6 +79,7 @@ TypeScript 为什么使用 `Structural Typing` ?
 ## <a name="typescript-basic-types"></a>TypeScript 基本类型
 ### 基本使用
 
+示例 `01_useage.ts`
 ```
 const aNumber: number = 123;
 function identity(aNumber: number): number {
@@ -88,6 +89,7 @@ function identity(aNumber: number): number {
 
 ### 原始类型
 
+示例 `02_basic.ts`
 ```
 let aNumber: number;
 let aString: string;
@@ -107,6 +109,7 @@ aBoolean = 'false'; // Error
 
 ### 数组 Array
 
+示例 `03_array.ts`
 ```
 let booleanArray: boolean[]; // 数组泛型 Array<boolean>
 
@@ -131,14 +134,15 @@ booleanArray = [true, 'false']; // Error
 - never 类型表示永不存在的值的类型, never 类型是任何类型的子类型，也可以赋值给任何类型，然而，没有类型是 never 的子类型或可以赋值给never 类型（除了never本身之外）， 即使 any 也不可以赋值给 never
 - object 表示非原始类型，也就是除 number，string，boolean，symbol，null或undefined 之外的类型
 
+示例 `04_misc-types.ts`
 ```
 // Null Or Undefined
-let aUndefined: undefined = undefined; // Oky
-aUndefined = null; // Oky
+let aUndefined: undefined = undefined; // Okay
+aUndefined = null; // Okay
 aUndefined = 1; // Error
 
-let aNull: null = null; // Oky
-aNull = undefined; // Oky
+let aNull: null = null; // Okay
+aNull = undefined; // Okay
 aNull = 1; // Error
 
 // Any
@@ -172,6 +176,7 @@ function infiniteLoop(): never {
 
 ### 接口 Interface
 
+示例 `05_interface.ts`
 ```
 interface Name {
     first: string;
@@ -246,6 +251,7 @@ square.sideLength = 10;
 
 ### 额外的属性检查 Excess Property Checks
 
+示例 `06_excess-property.ts`
 ```
 interface Point {
     x: number;
@@ -270,6 +276,7 @@ draw(point);
 可索引类型具有一个索引签名，它描述了对象索引的类型，还有相应的索引返回值类型, TypeScript支持两种索引签名：字符串和数字.
 
 
+示例 `07_indexable-types.ts`
 ```
 interface StringArray {
   [index: number]: string;
@@ -317,6 +324,7 @@ myArray[2] = 'Mallory'; // error!
 
 快速的提供一个类型，省去为类型起名（你可能会使用一个很糟糕的名称）, 发现需要多次使用相同的内联注解时，考虑把它重构为一个接口。
 
+示例 `08_inline-types.ts`
 ```
 let aName: {
     first: string;
@@ -343,11 +351,18 @@ aName = {
 ```
 
 ### 类型推论
+
+示例 `09_type-Inference.ts`
 ```
 let x = 3;
 let x = [0, 1, null];
 let zoo = [new Rhino(), new Elephant(), new Snake()]; // (Rhino | Elephant | Snake)[]
 let zoo: Animal[] = [new Rhino(), new Elephant(), new Snake()];
+
+window.onmousedown = function(mouseEvent) {
+    console.log(mouseEvent.button);   //<- OK
+    console.log(mouseEvent.kangaroo); //<- Error!
+};
 
 type Name = typeof aName; // 获取 aName 的类型
 
@@ -361,7 +376,7 @@ const typeOfStr = typeof '';
 - 只读属性 readonly 
 - never
 - 字符串和数字索引类型
-- typeof 获取内联类型
+- typeof 获取以及定义的类型
 - 类型断言 !
 
 ## <a name="generics"></a>泛型 Generics
@@ -385,6 +400,7 @@ function identity<T>(arg: T): T {
 ```
 
 #### 使用泛型变量
+示例 `12_generics.ts`
 ```
 function loggingIdentity<T>(arg: T): T {
     console.log(arg.length);  // Error: T doesn't have .length
@@ -398,6 +414,8 @@ function loggingIdentity<T>(arg: T[]): T[] {
 ```
 
 #### 泛型类型, 泛型接口
+
+示例 `13_generics-types.ts`
 ```
 function identity<T>(arg: T): T {
     return arg;
@@ -438,6 +456,7 @@ myGenericNumber.add = function(x, y) { return x + y; };
 
 #### 泛型约束
 
+示例 `14_generic-constraints.ts`
 ```
 interface Lengthwise {
     length: number;
@@ -459,6 +478,7 @@ loggingIdentity({length: 10, value: 3});
 交叉类型是将多个类型合并为一个类型。 这让我们可以把现有的多种类型叠加到一起成为一种类型，它包含了所需的所有类型的特性
 例如， `Person & Serializable & Loggable` 同时是 `Person` 和 `Serializable` 和 `Loggable`。 就是说这个类型的对象同时拥有了这三种类型的成员。
 
+示例 `15_intersection-types.ts`
 ```
 function extend<T, U>(first: T, second: U): T & U {
     let result = <T & U>{};
@@ -494,6 +514,7 @@ jim.log();
 
 联合类型表示一个值可以是几种类型之一。 我们用竖线 `|` 分隔每个类型，所以 `number | string | boolean` 表示一个值可以是 `number`， string，或 boolean。
 
+示例 `16_union-types.ts`
 ```
 interface Bird {
     fly(): void;
@@ -515,6 +536,8 @@ pet.swim(); // errors
 ```
 
 ### 类型保护与区分类型（Type Guards and Differentiating Types）
+
+示例 `17_type-guards-differentiating-types.ts`
 
 ```
 interface Bird {
@@ -566,13 +589,25 @@ else {
 
 TypeScript不仅知道在 if分支里 pet是 Fish类型； 它还清楚在 else分支里，一定 不是 Fish类型，一定是 Bird类型
 
-// 内置的类型保护
+内置的类型保护
 - typeof 类型保护
 - instanceof 类型保护
 
+用 `in` 操作符
+```
+function move(pet: Fish | Bird) {
+    if ("swim" in pet) {
+        return pet.swim();
+    }
+    return pet.fly();
+}
+```
+
 ### 类型别名
+
 类型别名会给一个类型起个新名字。 类型别名有时和接口很像，但是可以作用于原始值，联合类型，元组以及其它任何你需要手写的类型。
 
+示例 `18_type-aliases.ts`
 ```
 type Name = string;
 type NameResolver = () => string;
@@ -625,6 +660,8 @@ declare function interfaced(arg: Interface): Interface;
 ### 字符串字面量类型 String Literal Types
 
 字符串字面量类型允许你指定字符串必须的固定值。
+
+示例 `19_string-literal-types.ts`
 ```
 type Easing = "ease-in" | "ease-out" | "ease-in-out";
 class UIElement {
@@ -662,6 +699,7 @@ function rollDie(): 1 | 2 | 3 | 4 | 5 | 6 {
 - 一个类型别名包含了那些类型的联合 - 联合。
 - 此属性上的类型保护。
 
+示例 `20_discriminated-unions.ts`
 ```
 interface Square {
     kind: 'square';
@@ -690,6 +728,138 @@ function area(s: Shape) {
     }
 }
 ```
+
+### 索引类型（Index types）
+
+使用索引类型，编译器就能够检查使用了动态属性名的代码。
+
+示例 `21_index-types.ts`
+```
+function pluck(o, names) {
+    return names.map(n => o[n]);
+}
+```
+
+```
+
+function pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
+    return names.map(n => o[n]);
+}
+
+interface Person {
+    name: string;
+    age: number;
+}
+let person: Person = {
+    name: 'Jarid',
+    age: 35
+};
+let strings: string[] = pluck(person, ['name']); // ok, string[]
+```
+
+- `keyof T` 索引类型查询操作符。
+- `T[K]` 索引访问操作符
+
+```
+let personProps: keyof Person; // 'name' | 'age'
+```
+
+### 映射类型 Mapped types
+
+一个常见的任务是将一个已知的类型每个属性都变为可选的：
+```
+interface PersonPartial {
+    name?: string;
+    age?: number;
+}
+```
+或者我们想要一个只读版本：
+```
+interface PersonReadonly {
+    readonly name: string;
+    readonly age: number;
+}
+```
+
+TypeScript提供了从旧类型中创建新类型的一种方式 — 映射类型。 在映射类型里，新类型以相同的形式去转换旧类型里每个属性。 例如，你可以令每个属性成为 readonly类型或可选的。 下面是一些例子：
+```
+type MyReadonly<T> = {
+    readonly [P in keyof T]: T[P];
+}
+type MyPartial<T> = {
+    [P in keyof T]?: T[P];
+}
+```
+
+```
+type Keys = 'option1' | 'option2';
+type Flags = { [K in Keys]: boolean };
+
+type Flags = {
+    option1: boolean;
+    option2: boolean;
+}
+```
+
+
+### 条件类型 Conditional Types
+TypeScript 2.8 引入了条件类型，添加了非统一类型映射的能力，条件类型根据类型关系的条件选择两种可能类型之一
+```
+T extends U ? X : Y
+```
+The type above means when T is assignable to U the type is X, otherwise the type is Y.
+
+示例 `23_conditional-types.ts`
+```
+declare function f<T extends boolean>(x: T): T extends true ? string : number;
+
+// Type is 'string | number
+let x = f(Math.random() < 0.5);
+let x1: string = f(true);
+let x2: number = f(false);
+
+// TypeName
+type TypeName<T> = T extends string
+    ? 'string'
+    : T extends number
+    ? 'number'
+    : T extends boolean
+    ? 'boolean'
+    : T extends undefined
+    ? 'undefined'
+    : T extends Function
+    ? 'function'
+    : 'object';
+
+type T0 = TypeName<string>; // "string"
+type T1 = TypeName<'a'>; // "string"
+type T2 = TypeName<true>; // "boolean"
+type T3 = TypeName<() => void>; // "function"
+type T4 = TypeName<string[]>; // "object"
+// Distributive conditional types
+type T10 = TypeName<string | (() => void)>; // "string" | "function"
+type T12 = TypeName<string | string[] | undefined>; // "string" | "object" | "undefined"
+type T11 = TypeName<string[] | number[]>; // "object"
+```
+### 回顾一下所有使用到的操作符
+
+- ?
+- readonly
+- never
+- indexable types
+- typeof
+- as 或者 <Person>person
+- is
+- in
+- `<T>`
+- extends
+- `T[K]`
+- keyof 
+- -?
+- ! 非空断言
+- `T extends U ? X : Y`
+- infer
+
 
 ## TypeScript 内置的高级泛型类型
 

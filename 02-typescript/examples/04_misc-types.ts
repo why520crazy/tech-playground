@@ -1,10 +1,10 @@
 // // Null Or Undefined
-// let aUndefined: undefined = undefined; // Oky
-// aUndefined = null; // Oky
+// let aUndefined: undefined = undefined; // Okay
+// aUndefined = null; // Okay
 // aUndefined = 1; // Error
 
-// let aNull: null = null; // Oky
-// aNull = undefined; // Oky
+// let aNull: null = null; // Okay
+// aNull = undefined; // Okay
 // aNull = 1; // Error
 
 // // Any

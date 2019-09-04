@@ -22,12 +22,10 @@ function getSmallPet(): Fish | Bird {
 //     pet.fly();
 // }
 
-
 let pet = getSmallPet();
 if ((<Fish>pet).swim) {
     (<Fish>pet).swim();
-}
-else {
+} else {
     (<Bird>pet).fly();
 }
 
@@ -38,19 +36,25 @@ function isFish(pet: Fish | Bird): pet is Fish {
 
 if (isFish(pet)) {
     pet.swim();
-}
-else {
+} else {
     pet.fly();
 }
 
-
-
+// typeof
 function padLeft(value: string, padding: string | number) {
-    if (typeof padding === "number") {
-        return Array(padding + 1).join(" ") + value;
+    if (typeof padding === 'number') {
+        return Array(padding + 1).join(' ') + value;
     }
-    if (typeof padding === "string") {
+    if (typeof padding === 'string') {
         return padding + value;
     }
     throw new Error(`Expected string or number, got '${padding}'.`);
+}
+
+// in operator
+function move(pet: Fish | Bird) {
+    if ('swim' in pet) {
+        return pet.swim();
+    }
+    return pet.fly();
 }
