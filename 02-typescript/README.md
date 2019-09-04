@@ -5,8 +5,8 @@
 - [TypeScript 基本类型](#typescript-basic-types)
 - [TypeScript 泛型](#generics)
 - [TypeScript 高级类型](#typescript-advance-types)
-- [TypeScript 内置类型](#typescript-types)
-- [常见的场景](#scenes)
+- [TypeScript 内置类型](#predefined-types)
+- [练习题](#exercises)
 - [引用材料](#references)
 
 ## <a name="programing-language"></a>编程语言简单介绍
@@ -841,6 +841,78 @@ type T10 = TypeName<string | (() => void)>; // "string" | "function"
 type T12 = TypeName<string | string[] | undefined>; // "string" | "object" | "undefined"
 type T11 = TypeName<string[] | number[]>; // "object"
 ```
+
+Distributive conditional types
+示例 `24_distributive-conditional-types.ts`
+
+```
+type Diff<T, U> = T extends U ? never : T; // Remove types from T that are assignable to U
+type Filter<T, U> = T extends U ? T : never; // Remove types from T that are not assignable to U
+
+type T30 = Diff<'a' | 'b' | 'c' | 'd', 'a' | 'c' | 'f'>; // "b" | "d"
+type T31 = Filter<'a' | 'b' | 'c' | 'd', 'a' | 'c' | 'f'>; // "a" | "c"
+type T32 = Diff<string | number | (() => void), Function>; // string | number
+type T33 = Filter<string | number | (() => void), Function>; // () => void
+
+type MyNonNullable<T> = Diff<T, null | undefined>; // Remove null and undefined from T
+
+type T34 = NonNullable<string | number | undefined>; // string | number
+type T35 = NonNullable<string | string[] | null | undefined>; // string | string[]
+
+function f1<T>(x: T, y: NonNullable<T>) {
+    x = y; // Ok
+    y = x; // Error
+}
+
+function f2<T extends string | undefined>(x: T, y: MyNonNullable<T>) {
+    x = y; // Ok
+    y = x; // Error
+    let s1: string = x; // Error
+    let s2: string = y; // Ok
+}
+
+type FunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? K : never }[keyof T];
+type FunctionProperties<T> = Pick<T, FunctionPropertyNames<T>>;
+
+type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
+type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
+
+interface Part {
+    id: number;
+    name: string;
+    subparts: Part[];
+    updatePart(newName: string): void;
+}
+
+type T40 = FunctionPropertyNames<Part>;  // "updatePart"
+type T41 = NonFunctionPropertyNames<Part>;  // "id" | "name" | "subparts"
+type T42 = FunctionProperties<Part>;  // { updatePart(newName: string): void }
+type T43 = NonFunctionProperties<Part>;  // { id: number, name: string, subparts: Part[] }
+```
+
+Type inference in conditional types 
+
+写一个类型，当是数组的时候返回数组元素的类型，当是函数的时候返回函数的返回值，当是 Promise 的时候返回 Promise 的返回值
+
+示例 `25_inference-conditional-types.ts`
+
+```
+type MyReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
+
+type Unpacked<T> =
+    T extends (infer U)[] ? U :
+    T extends (...args: any[]) => infer U ? U :
+    T extends Promise<infer U> ? U :
+    T;
+
+type T0 = Unpacked<string>;  // string
+type T1 = Unpacked<string[]>;  // string
+type T2 = Unpacked<() => string>;  // string
+type T3 = Unpacked<Promise<string>>;  // string
+type T4 = Unpacked<Promise<string>[]>;  // Promise<string>
+type T5 = Unpacked<Unpacked<Promise<string>[]>>;  // string
+```
+
 ### 回顾一下所有使用到的操作符
 
 - ?
@@ -848,7 +920,7 @@ type T11 = TypeName<string[] | number[]>; // "object"
 - never
 - indexable types
 - typeof
-- as 或者 <Person>person
+- as 或者 `<Person>person`
 - is
 - in
 - `<T>`
@@ -861,40 +933,85 @@ type T11 = TypeName<string[] | number[]>; // "object"
 - infer
 
 
-## TypeScript 内置的高级泛型类型
+## <a name="predefined-types"></a>TypeScript 内置的高级类型
 
-- Required
-- Readonly
+- Required 
 - Partial
+- Readonly
 - Pick
 - Record
+- Omit
 - Exclude
 - Extract
-- Omit
 - NonNullable
-- Parameters
-- ConstructorParameters
 - ReturnType
 - InstanceType
+- Parameters
+- ConstructorParameters
 - ThisType
 
+示例 `26_predefined-types.ts`
 
-## 反模式
+## <a name="exercises"></a>练习题
+
+1. 连接 iris 消息服务后发送消息，发送消息分4种事件，分别为 `connect`, `join`, `leave`, `message` , `connect` 不需要传任何参数，`join` 传字符串，`leave` 传数字，`message` 传含有 `from` `to` `content` 的格式。
+```
+enum SendTypes {
+    connect = 1,
+    join = 2,
+    leave = 3,
+    message = 4
+}
+
+interface MessageInfo {
+    from: string;
+    to: string;
+    content: string;
+}
+
+function send(type: SendTypes, data?: string | number | never | MessageInfo) {}
+```
+2. `references` 中有 `users`, `tags`, 添加或者修改某个属性后会返回新的 references, 返回的 `references` 只包含一条记录，需要和原有的 References 中的数组进行比较，发现已经存在直接合并最新的属性，否则向数组 `Push` 一条记录，比较的时候需要指定唯一的 IdKey，比如 `users` 的 Id Key 是 `uid`, `tags` 是的 Id Key 是 `_id`
 
 ```
-const condition: any = {
-    project_id: context.project._id,
-    is_deleted: { $ne: Is.yes },
-    is_archived: { $ne: Is.yes }
+function mergeReferences<TReferences>(
+    originalReferences: TReferences,
+    appendReferences: TReferences,
+    idKeys: { [key: string]: string }
+): TReferences {
+    // ...
+    return originalReferences;
+}
+
+interface UserInfo {
+    uid: string;
+    name: string;
+    display_name: string;
+}
+
+interface TagInfo {
+    _id: string;
+    name: string;
+    color: string;
+}
+
+interface References {
+    users: UserInfo[];
+    tags: TagInfo[];
+    project?: { name: string };
+}
+
+const references: References = {
+    users: [],
+    tags: []
 };
 
-if (!_.isNil(view.priority)) {
-    const option = this.validateOptions(ScrumDefectStatisticsProperties.priority, _.parseId(view.priority));
-    condition.priority = option._id;
-}
+mergeReferences(references, references, { users: 'uid', departments: '_id' });
+mergeReferences(references, references, { users1: 'uid', departments: '_id' });
 ```
 
 ## <a name="references"></a>引用材料
+
 https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md
 https://www.typescriptlang.org/docs/home.html
 https://www.tslang.cn/docs/handbook/basic-types.html
@@ -902,4 +1019,5 @@ https://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1
 https://zhuanlan.zhihu.com/p/64446259
 https://www.zhihu.com/question/23434097
 https://juejin.im/post/5cffb431f265da1b7401f466
-````
+https://github.com/Microsoft/TypeScript/issues/14833
+
