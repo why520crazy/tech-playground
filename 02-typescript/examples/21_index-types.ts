@@ -16,10 +16,7 @@
 // };
 // let strings: string[] = pluck(person, ['name']); // ok, string[]
 
-
-
-
-
+// // getProperty
 // function getProperty<T, K extends keyof T>(o: T, name: K): T[K] {
 //     return o[name]; // o[name] is of type T[K]
 // }
@@ -28,7 +25,7 @@
 // let personAge: number = getProperty(person, 'age');
 // let unknown = getProperty(person, 'unknown'); // error, 'unknown' is not in 'name' | 'age'
 
-
+// // 索引类型和字符串索引签名
 // interface Dictionary<T> {
 //     [key: string]: T;
 // }

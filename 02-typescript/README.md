@@ -751,7 +751,7 @@ declare function aliased(arg: Alias): Alias;
 declare function interfaced(arg: Interface): Interface;
 ```
 
-与接口的最大区别：类型别名不能被 extends和 implements，因为 软件中的对象应该对于扩展是开放的，但是对于修改是封闭的，你应该尽量去使用接口代替类型别名。
+与接口的最大区别：类型别名不能被 extends 和 implements，因为软件中的对象应该对于扩展是开放的，但是对于修改是封闭的，你应该尽量去使用接口代替类型别名。
 
 无法通过接口来描述一个类型并且需要使用联合类型或元组类型，这时通常会使用类型别名。
 
@@ -791,7 +791,7 @@ function rollDie(): 1 | 2 | 3 | 4 | 5 | 6 {
 
 ### 可辨识联合（Discriminated Unions）
 
-你可以合并单例类型(枚举成员类型和数字/字符串字面量类)，联合类型，类型保护和类型别名来创建一个叫做可辨识联合的高级模式，它也称做 标签联合或 代数数据类型。 可辨识联合在函数式编程很有用处。 一些语言会自动地为你辨识联合；而 TypeScript 则基于已有的JavaScript模式。 它具有3个要素：
+你可以合并单例类型(枚举成员类型和数字/字符串字面量类)，联合类型，类型保护和类型别名来创建一个叫做可辨识联合的高级模式，它也称做 标签联合或代数数据类型。 可辨识联合在函数式编程很有用处。 一些语言会自动地为你辨识联合；而 TypeScript 则基于已有的JavaScript模式。 它具有3个要素：
 
 - 具有普通的单例类型属性 - 可辨识的特征。
 - 一个类型别名包含了那些类型的联合 - 联合。
@@ -826,6 +826,11 @@ function area(s: Shape) {
     }
 }
 ```
+
+完整性检查
+
+添加了 Triangle 到 Shape，我们同时还需要更新 area,  如何实现编译检查？？？ 看示例 `20_discriminated-unions.ts`
+
 
 ### 索引类型（Index types）
 
@@ -865,6 +870,7 @@ let personProps: keyof Person; // 'name' | 'age'
 ### 映射类型 Mapped types
 
 一个常见的任务是将一个已知的类型每个属性都变为可选的：
+示例 `22_mapped-types.ts`
 ```
 interface PersonPartial {
     name?: string;
@@ -898,6 +904,8 @@ type Flags = {
     option2: boolean;
 }
 ```
+
+由映射类型进行推断
 
 
 ### 条件类型 Conditional Types
@@ -1013,20 +1021,20 @@ type T5 = Unpacked<Unpacked<Promise<string>[]>>;  // string
 
 ### 回顾一下所有使用到的操作符
 
-- ?
+- ? 为空
 - readonly
 - never
+- ! 非空断言
 - indexable types
 - typeof
 - as 或者 `<Person>person`
-- is
+- is 实现自定义保护类型
 - in
 - `<T>`
-- extends
+- `T extends string | number`
 - `T[K]`
 - keyof 
-- -?
-- ! 非空断言
+- -? 不为空
 - `T extends U ? X : Y`
 - infer
 
@@ -1053,7 +1061,7 @@ type T5 = Unpacked<Unpacked<Promise<string>[]>>;  // string
 ## <a name="exercises"></a>练习题
 
 1. 连接 iris 消息服务后发送消息，发送消息分4种事件，分别为 `connect`, `join`, `leave`, `message` , `connect` 不需要传任何参数，`join` 传字符串，`leave` 传数字，`message` 传含有 `from` `to` `content` 的格式。
-```
+ ```
 enum SendTypes {
     connect = 1,
     join = 2,
@@ -1071,7 +1079,7 @@ function send(type: SendTypes, data?: string | number | never | MessageInfo) {}
 ```
 2. `references` 中有 `users`, `tags`, 添加或者修改某个属性后会返回新的 references, 返回的 `references` 只包含一条记录，需要和原有的 References 中的数组进行比较，发现已经存在直接合并最新的属性，否则向数组 `Push` 一条记录，比较的时候需要指定唯一的 IdKey，比如 `users` 的 Id Key 是 `uid`, `tags` 是的 Id Key 是 `_id`
 
-```
+ ```
 function mergeReferences<TReferences>(
     originalReferences: TReferences,
     appendReferences: TReferences,
