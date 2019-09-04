@@ -371,7 +371,7 @@ const typeOfStr = typeof '';
 ```
 
 ## 类型保护和类型断言
-默认情况下，类型检查器认为 null与 undefined 可以赋值给任何类型, strictNullChecks 开启
+默认情况下，类型检查器认为 null 与 undefined 可以赋值给任何类型, `strictNullChecks` 开启后会严格区分
 
 示例 `10_type-guards-type-assertions.ts`
 ```
@@ -415,21 +415,23 @@ function fixed(name: string | null): string {
 ```
 本例使用了嵌套函数，因为编译器无法去除嵌套函数的null（除非是立即调用的函数表达式）。 因为它无法跟踪所有对嵌套函数的调用，尤其是你将内层函数做为外层函数的返回值。 如果无法知道函数在哪里被调用，就无法知道调用时 name的类型。
 
-### 回顾类型的几个知识点
+### 回顾的几个知识点
 
 - 可选属性 ?, 可选参数也是使用 ?
 - 只读属性 readonly 
 - never
 - 字符串和数字索引类型
-- typeof 获取以及定义的类型
+- typeof 获取已经定义的类型
+- 类型推断
 - 类型断言 ! 
 
 ## <a name="generics"></a>泛型 Generics
 
 #### 泛型基本使用
 
-创建一个 identity 函数, 这个函数会返回任何传入它的值，不用范型有哪几种方式实现这个函数？
+创建一个 identity 函数, 这个函数会返回任何传入它的值，不用泛型有哪几种方式实现这个函数？
 
+示例 `12_generics.ts`
 ```
 function identity(arg: number): number {
     return arg;
@@ -514,6 +516,57 @@ function loggingIdentity<T extends Lengthwise>(arg: T): T {
 
 loggingIdentity(3);  // Error, number doesn't have a .length property
 loggingIdentity({length: 10, value: 3});
+```
+
+`extends` 表示 T 类型必须可以赋值给 `Lengthwise`, 此处的 `extends` 和 接口类的继承不同
+
+在泛型约束中使用类型参数
+
+```
+function getProperty<T, K extends keyof T>(obj: T, key: K) {
+    return obj[key];
+}
+
+let x = { a: 1, b: 2, c: 3, d: 4 };
+
+getProperty(x, "a"); // okay
+getProperty(x, "m"); // error: Argument of type 'm' isn't assignable to 'a' | 'b' | 'c' | 'd'.
+
+```
+
+在泛型里使用类类型
+
+```
+function create<T>(c: {new(): T; }): T {
+    return new c();
+}
+
+class BeeKeeper {
+    hasMask: boolean;
+}
+
+class ZooKeeper {
+    nametag: string;
+}
+
+class Animal {
+    numLegs: number;
+}
+
+class Bee extends Animal {
+    keeper: BeeKeeper;
+}
+
+class Lion extends Animal {
+    keeper: ZooKeeper;
+}
+
+function createInstance<A extends Animal>(c: new () => A): A {
+    return new c();
+}
+
+createInstance(Lion).keeper.nametag;  // typechecks!
+createInstance(Bee).keeper.hasMask;   // typechecks!
 ```
 
 ## <a name="typescript-advance-types"></a>高级类型
