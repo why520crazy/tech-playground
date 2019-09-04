@@ -1127,12 +1127,12 @@ mergeReferences(references, references, { users1: 'uid', departments: '_id' });
 
 ## <a name="references"></a>引用材料
 
-https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md
-https://www.typescriptlang.org/docs/home.html
-https://www.tslang.cn/docs/handbook/basic-types.html
-https://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1
-https://zhuanlan.zhihu.com/p/64446259
-https://www.zhihu.com/question/23434097
-https://juejin.im/post/5cffb431f265da1b7401f466
-https://github.com/Microsoft/TypeScript/issues/14833
+- https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md
+- https://www.typescriptlang.org/docs/home.html
+- https://www.tslang.cn/docs/handbook/basic-types.html
+- https://zh.wikipedia.org/wiki/%E9%A1%9E%E5%9E%8B%E7%B3%BB%E7%B5%B1
+- https://zhuanlan.zhihu.com/p/64446259
+- https://www.zhihu.com/question/23434097
+- https://juejin.im/post/5cffb431f265da1b7401f466
+- https://github.com/Microsoft/TypeScript/issues/14833
 
