@@ -1026,17 +1026,20 @@ type T5 = Unpacked<Unpacked<Promise<string>[]>>;  // string
 - never
 - ! 非空断言
 - indexable types
+- type 声明类型别名
+- & 交叉类型
+- | 联合类型
 - typeof
 - as 或者 `<Person>person`
 - is 实现自定义保护类型
-- in
-- `<T>`
-- `T extends string | number`
-- `T[K]`
-- keyof 
+- in 可以起保护类型作用
+- `<T>` 泛型
+- `T extends string | number` 类型约束
+- `T[K]` 取 T 中索引 K 的类型
+- `keyof T` 取 T 中所有属性 Key
 - -? 不为空
-- `T extends U ? X : Y`
-- infer
+- `T extends U ? X : Y` 条件约束
+- infer 在条件约束类型推断
 
 
 ## <a name="predefined-types"></a>TypeScript 内置的类型
