@@ -490,4 +490,4 @@ DevOps聚焦突破性思维，更好更快更省
   2. 如何确保替换的服务在旧的服务关闭前准备就绪
   3. 在什么时间，以什么顺序关闭旧的服务
 
-  
+![ngx-planet-micro-front-end.gif](/why520crazy/tech-playground/blob/master/devops/maturity.png?raw=true)
