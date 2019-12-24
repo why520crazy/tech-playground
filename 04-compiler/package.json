@@ -1,0 +1,22 @@
+{
+  "name": "compiler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "art-template": "^4.13.2",
+    "marked": "0.7.0"
+  },
+  "devDependencies": {
+    "@types/marked": "0.7.0",
+    "typescript": "^3.7.3"
+  }
+}
