@@ -10,7 +10,7 @@ namespace TinyCompilerNS {
         expressions?: ASTNode[];
     }
 
-    class TinyCompiler {deno
+    class TinyCompiler {
         str: string;
 
         constructor(str: string) {
