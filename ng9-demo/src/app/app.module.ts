@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgxTethysModule } from 'ngx-tethys';
+// import { NgxTethysModule } from 'ngx-tethys';
 import { CommonModule } from '@angular/common';
 import { ItemComponent } from './item/item.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,7 +20,7 @@ import { BreadcrumbItemComponent } from './breadcrumb/item/breadcrumb-item.compo
         BrowserModule,
         CommonModule,
         AppRoutingModule,
-        NgxTethysModule,
+        // NgxTethysModule,
         BrowserAnimationsModule,
         MatTableModule,
         MatPaginatorModule,
