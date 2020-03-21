@@ -11,6 +11,7 @@ export class AppComponent {
     e: HTMLElement;
     value: string;
 
+    home = '首页 <script>alert(111)</script>  <////--><details open ontoggle=confirm(/我是脚本/)> ';
     nodes = [];
 
     constructor() {

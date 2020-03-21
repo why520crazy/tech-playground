@@ -1,5 +1,4 @@
 <ng-template #content>
-  ddddd
   <ng-content></ng-content>
 </ng-template>
 
@@ -10,15 +9,16 @@
 <ng-container *ngIf="items">
   第一个面包屑：
   <ng-container *ngFor="let item of items">
-    <span class="breadcrumb-item" [innerHTML]="item.elementRef.nativeElement.innerHTML"></span>
+    <span class="breadcrumb-item" [innerHTML]="item.elementRef.nativeElement.innerHTML | safeHtml"></span>
   </ng-container>
   <br />
   第二个面包屑：
   <ng-container *ngFor="let item of items">
-    <span class="breadcrumb-item" [innerHTML]="item.elementRef.nativeElement.innerHTML"></span>
+    <span class="breadcrumb-item" [innerHTML]="item.elementRef.nativeElement.innerHTML | safeHtml"></span>
   </ng-container>
 </ng-container>
 
+<br>
 <!-- <ng-container *ngIf="content">
   <ng-container *ngTemplateOutlet="content"></ng-container>
 </ng-container>

@@ -11,11 +11,11 @@ import { UsersComponent } from './users/users.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent, SafeHtml } from './breadcrumb/breadcrumb.component';
 import { BreadcrumbItemComponent } from './breadcrumb/item/breadcrumb-item.component';
 
 @NgModule({
-    declarations: [AppComponent, ItemComponent, UsersComponent, BreadcrumbComponent, BreadcrumbItemComponent],
+    declarations: [AppComponent, ItemComponent, UsersComponent, BreadcrumbComponent, BreadcrumbItemComponent, SafeHtml],
     imports: [
         BrowserModule,
         CommonModule,

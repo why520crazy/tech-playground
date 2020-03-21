@@ -11,10 +11,24 @@ import {
     AfterViewChecked,
     AfterContentChecked,
     AfterContentInit,
-    OnChanges
+    OnChanges,
+    Pipe,
+    PipeTransform,
+    SecurityContext
 } from '@angular/core';
 import { BreadcrumbItemComponent } from './item/breadcrumb-item.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
+@Pipe({ name: 'safeHtml' })
+export class SafeHtml implements PipeTransform {
+    constructor(private sanitizer: DomSanitizer) {}
+    transform(html: string) {
+        console.log(html);
+        // return html;
+        // const sanitizeHTML = this.sanitizer.sanitize(SecurityContext.HTML, html);
+        return this.sanitizer.bypassSecurityTrustHtml(html);
+    }
+}
 @Component({
     selector: 'app-breadcrumb',
     templateUrl: './breadcrumb.component.html'
@@ -50,8 +64,8 @@ export class BreadcrumbComponent
 
     ngOnInit(): void {
         console.log('ngOnInit');
-        debugger;
         console.log(this.template.elementRef.nativeElement);
+        console.log(this.template.elementRef)
     }
 
     ngOnChanges() {
