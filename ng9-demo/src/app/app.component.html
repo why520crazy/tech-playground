@@ -11,11 +11,15 @@
   <app-item *ngFor="let node of nodes; trackBy: trackByFn" [node]="node"></app-item>
 </div> -->
 
-<app-breadcrumb>
+<app-breadcrumb [ngClass]="['b-size-' + size, 'b-theme-' + theme, className]" [showA]="false" [class.fixed]="true" showA="false">
   <app-breadcrumb-item>
-    <a href="javascript:;">{{home}}</a>
+    <a href="javascript:;">{{ home }}</a>
   </app-breadcrumb-item>
   <app-breadcrumb-item>
     <a href="javascript:;">标题</a>
   </app-breadcrumb-item>
 </app-breadcrumb>
+
+<input type="number" min="0" name="number" [(ngModel)]="number" />
+
+<div [innerHTML]="trustHtml"></div>

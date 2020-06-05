@@ -14,7 +14,8 @@ import {
     OnChanges,
     Pipe,
     PipeTransform,
-    SecurityContext
+    SecurityContext,
+    Input,
 } from '@angular/core';
 import { BreadcrumbItemComponent } from './item/breadcrumb-item.component';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -31,7 +32,7 @@ export class SafeHtml implements PipeTransform {
 }
 @Component({
     selector: 'app-breadcrumb',
-    templateUrl: './breadcrumb.component.html'
+    templateUrl: './breadcrumb.component.html',
 })
 export class BreadcrumbComponent
     implements OnInit, AfterViewInit, AfterViewChecked, AfterContentChecked, AfterContentInit, OnChanges {
@@ -43,6 +44,8 @@ export class BreadcrumbComponent
     @ContentChildren(BreadcrumbItemComponent) set _items(items: QueryList<BreadcrumbItemComponent>) {
         this.items = items.toArray();
     }
+
+    @Input() showA: boolean;
 
     constructor() {}
 
@@ -65,7 +68,7 @@ export class BreadcrumbComponent
     ngOnInit(): void {
         console.log('ngOnInit');
         console.log(this.template.elementRef.nativeElement);
-        console.log(this.template.elementRef)
+        console.log(this.template.elementRef);
     }
 
     ngOnChanges() {
