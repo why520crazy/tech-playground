@@ -1022,24 +1022,26 @@ type T5 = Unpacked<Unpacked<Promise<string>[]>>;  // string
 ### 回顾一下所有使用到的操作符
 
 - ? 为空
-- readonly
-- never
+- -? 不为空
+- readonly 只读
+- never 永远不存在的类型
+- unknown 不知道的类型
+- any 任何类型
 - ! 非空断言
-- indexable types
+- [key: number | string]: xxx 可索引的类型
 - type 声明类型别名
 - & 交叉类型
 - | 联合类型
 - typeof
-- as 或者 `<Person>person`
+- as `<Person>person` 类型转换
 - is 实现自定义保护类型
-- in 可以起保护类型作用
+- in 保护类型作用 + 类型范围缩窄
 - `<T>` 泛型
 - `T extends string | number` 类型约束
+- `T extends U ? X : Y` 条件约束
 - `T[K]` 取 T 中索引 K 的类型
 - `keyof T` 取 T 中所有属性 Key
-- -? 不为空
-- `T extends U ? X : Y` 条件约束
-- infer 在条件约束类型推断
+- infer 在条件约束中类型推断
 
 
 ## <a name="predefined-types"></a>TypeScript 内置的类型
