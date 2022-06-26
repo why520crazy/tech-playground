@@ -1,15 +1,13 @@
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ConcatPlugin = require('webpack-concat-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const webpack = require('webpack');
 const workspaceRoot = path.resolve(__dirname, './');
 const projectRoot = path.resolve(__dirname, './');
+const stdout = process.stdout;
 
-const vendorsScripts = ['jquery', 'angular', 'angular-animate', 'moment'];
-
-let count = 0;
-module.exports = exports = {
+const webpackConfig = {
     mode: 'development',
     entry: {
         // vendors: ["jquery", "angular", "angular-animate", "moment"],
@@ -34,19 +32,6 @@ module.exports = exports = {
     },
     devtool: 'none',
     // devtool: "source-map",
-    stats: {
-        assets: false,
-        // builtAt: true,
-        moduleAssets: false,
-        // entrypoints: false,
-        chunkModules: false,
-        modules: false,
-        // namedChunkGroups: false
-        // assetsSpace: false,
-        // modulesSpace: false,
-        // cachedModules: false
-        // groupAssetsByChunk: false
-    },
 
     module: {
         rules: [
@@ -85,7 +70,7 @@ module.exports = exports = {
             // activeModules: false,
             // entries: true,
             // handler(percentage, message, ...args) {
-            //    console.log(`ddd`)
+            //     // custom logic
             // },
             // modules: true,
             // modulesCount: 5000,
@@ -94,23 +79,9 @@ module.exports = exports = {
             // dependenciesCount: 10000,
             // percentBy: null,
         }),
-        // new CopyWebpackPlugin([
-        //     {
-        //         context: path.resolve('./src/assets/'),
-        //         from: '**/*',
-        //         to: 'assets/',
-        //     }
-        // ]),
-        new CopyWebpackPlugin([
-            {
-                from: `src/assets`,
-                to: `assets`
-            },
-            {
-                from: `src/lib`,
-                to: `lib`
-            }
-        ]),
+        new CopyWebpackPlugin({
+
+        })
     ],
     externals: {
         jquery: 'jQuery',
@@ -118,6 +89,9 @@ module.exports = exports = {
         lodash: '_',
         angular: 'angular',
     },
+    // stats: {
+    //     progress: false
+    // },
     // optimization: {
     //     // runtimeChunk: true,
     //     splitChunks: {
@@ -171,6 +145,16 @@ module.exports = exports = {
         contentBase: path.join(__dirname, 'dist'),
         compress: false,
         port: 9000,
-        hot: true
     },
 };
+
+webpack(webpackConfig).run((error, stats) => {
+    console.log('----');
+    // const json = stats.toJson()
+    // console.log(json);
+    const str = stats.toString({
+        colors: require("supports-color").stdout
+    });
+    stdout.write(`${str}\n`);
+});
+
